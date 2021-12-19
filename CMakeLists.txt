@@ -19,6 +19,8 @@ add_library(CompiledNN
     Src/CompiledNN/SimpleNN.cpp
     Src/CompiledNN/SimpleNN.h
     Src/CompiledNN/Tensor.h
+    Src/CompiledNN/Thinterface.cpp
+    Src/CompiledNN/Thinterface.h
     Src/CompiledNN/CompiledNN/ActivationFunctions.cpp
     Src/CompiledNN/CompiledNN/ActivationFunctions.h
     Src/CompiledNN/CompiledNN/CompilationSettings.cpp
@@ -254,7 +256,7 @@ target_link_libraries(CompiledNN PUBLIC
     $<$<PLATFORM_ID:Linux>:pthread> $<$<PLATFORM_ID:Linux>:rt>
 )
 set_target_properties(CompiledNN PROPERTIES
-    PUBLIC_HEADER "Src/CompiledNN/CompiledNN.h;Src/CompiledNN/Model.h;Src/CompiledNN/SimpleNN.h;Src/CompiledNN/Tensor.h"
+    PUBLIC_HEADER "Src/CompiledNN/CompiledNN.h;Src/CompiledNN/Model.h;Src/CompiledNN/SimpleNN.h;Src/CompiledNN/Tensor.h;Src/CompiledNN/Thinterface.h"
 )
 
 if(WITH_KERAS_HDF5)
