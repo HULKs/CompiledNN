@@ -261,7 +261,23 @@ set_target_properties(CompiledNN PROPERTIES
 
 if(WITH_KERAS_HDF5)
   find_package(HDF5 REQUIRED)
-  target_link_libraries(CompiledNN PRIVATE hdf5::hdf5)
+  if(TARGET hdf5::hdf5)
+    target_link_libraries(CompiledNN PRIVATE hdf5::hdf5)
+  elseif(TARGET hdf5::hdf5-shared OR TARGET hdf5::hdf5-static)
+    if(BUILD_SHARED_LIBS)
+      target_link_libraries(CompiledNN PRIVATE hdf5::hdf5-shared)
+    else()
+      target_link_libraries(CompiledNN PRIVATE hdf5::hdf5-static)
+    endif()
+  else()
+    add_library(hdf5::hdf5-static INTERFACE IMPORTED)
+    set_target_properties(hdf5::hdf5-static PROPERTIES
+        INTERFACE_LINK_LIBRARIES "${HDF5_C_LIBRARIES}"
+        INTERFACE_INCLUDE_DIRECTORIES "${HDF5_C_INCLUDE_DIRS}"
+        INTERFACE_COMPILE_OPTIONS "${HDF5_C_DEFINITIONS}"
+    )
+    target_link_libraries(CompiledNN PRIVATE hdf5::hdf5-static)
+  endif()
   target_compile_definitions(CompiledNN PRIVATE WITH_KERAS_HDF5)
   target_sources(CompiledNN PRIVATE
       Src/CompiledNN/Formats/KerasHDF5.cpp
