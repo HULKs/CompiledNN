@@ -260,7 +260,10 @@ set_target_properties(CompiledNN PROPERTIES
 )
 
 if(WITH_KERAS_HDF5)
-  find_package(HDF5 REQUIRED)
+  # Always ensure to use HDF5 outside of sysroots and other find root paths
+  list(PREPEND CMAKE_FIND_ROOT_PATH "/")
+  find_package(HDF5 REQUIRED CONFIG)
+  list(POP_FRONT CMAKE_FIND_ROOT_PATH)
   if(TARGET hdf5::hdf5)
     target_link_libraries(CompiledNN PRIVATE hdf5::hdf5)
   elseif(TARGET hdf5::hdf5-shared OR TARGET hdf5::hdf5-static)
