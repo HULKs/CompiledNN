@@ -210,7 +210,6 @@ add_library(CompiledNN
 
     3rdParty/B-Human/MathBase/BHMath.h
     3rdParty/B-Human/MathBase/NeumaierSum.h
-    3rdParty/B-Human/Platform/BHAssert.cpp
     3rdParty/B-Human/Platform/BHAssert.h
     3rdParty/B-Human/Streaming/InOut.cpp
     3rdParty/B-Human/Streaming/InOut.h
@@ -258,6 +257,7 @@ target_link_libraries(CompiledNN PUBLIC
 )
 set_target_properties(CompiledNN PROPERTIES
     PUBLIC_HEADER "Src/CompiledNN/CompiledNN.h;Src/CompiledNN/Model.h;Src/CompiledNN/SimpleNN.h;Src/CompiledNN/Tensor.h;Src/CompiledNN/Thinterface.h"
+    VERSION ${PROJECT_VERSION}
 )
 
 if(WITH_KERAS_HDF5)

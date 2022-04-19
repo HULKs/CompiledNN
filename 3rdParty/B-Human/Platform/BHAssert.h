@@ -8,9 +8,13 @@
 #pragma once
 
 #undef ASSERT
+#define ASSERT(cond) ((void)0)
 #undef FAIL
+#define FAIL(text) ((void)0)
 #undef VERIFY
+#define VERIFY(cond) ((void)(cond))
 
+#if 0
 #include <string>
 #include <sstream>
 
@@ -73,4 +77,5 @@ public:
 #define VERIFY(cond) static_cast<void>(cond)
 #else
 #define VERIFY(cond) static_cast<void>((cond) ? 0 : (Assert::print(__FILE__, __LINE__, "VERIFY(%s) failed", #cond), Assert::abort(), 0))
+#endif
 #endif
