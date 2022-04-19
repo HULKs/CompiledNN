@@ -5,6 +5,7 @@ option(WITH_APPLICATIONS "Build applications." OFF)
 option(WITH_TESTS "Build tests." OFF)
 option(WITH_COVERAGE "Enable coverage." OFF)
 option(WITH_KERAS_HDF5 "Enable Keras HDF5 model format." ON)
+option(WITH_BUILTIN_HDF5 "Use builtin HDF5 package." ON)
 option(WITH_ONNX "Enable ONNX model format." ON)
 
 set(CMAKE_CXX_STANDARD 14)
@@ -260,9 +261,23 @@ set_target_properties(CompiledNN PROPERTIES
 )
 
 if(WITH_KERAS_HDF5)
-  add_subdirectory(hdf5)
-  target_link_libraries(CompiledNN PRIVATE hdf5)
-  target_include_directories(CompiledNN PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/hdf5/src" "${CMAKE_CURRENT_BINARY_DIR}/hdf5/src")
+  if(WITH_BUILTIN_HDF5)
+    add_subdirectory(hdf5)
+    target_link_libraries(CompiledNN PRIVATE hdf5)
+    target_include_directories(CompiledNN PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/hdf5/src" "${CMAKE_CURRENT_BINARY_DIR}/hdf5/src")
+  else()
+    find_package(HDF5 REQUIRED)
+    if(NOT TARGET hdf5::hdf5-shared)
+      add_library(hdf5::hdf5-shared INTERFACE IMPORTED)
+      set_target_properties(hdf5::hdf5-shared PROPERTIES
+          INTERFACE_LINK_LIBRARIES "${HDF5_C_LIBRARIES}"
+          INTERFACE_INCLUDE_DIRECTORIES "${HDF5_C_INCLUDE_DIRS}"
+          INTERFACE_COMPILE_OPTIONS "${HDF5_C_DEFINITIONS}"
+      )
+    endif()
+    target_link_libraries(CompiledNN PRIVATE hdf5::hdf5-shared)
+  endif()
+
   target_compile_definitions(CompiledNN PRIVATE WITH_KERAS_HDF5)
   target_sources(CompiledNN PRIVATE
       Src/CompiledNN/Formats/KerasHDF5.cpp
@@ -359,4 +374,17 @@ install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/CompiledNNConfig.cmake"
     "${CMAKE_CURRENT_BINARY_DIR}/CompiledNNConfigVersion.cmake"
     DESTINATION "${CMAKE_INSTALL_DATADIR}/cmake/CompiledNN"
+)
+
+# install pkg-config files
+set(pc_target CompiledNN)
+
+set(pc_libs_private "-lhdf5")
+set(pc_req_private)
+set(pc_req_public)
+
+configure_file(compilednn.pc.in compilednn.pc @ONLY)
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/compilednn.pc
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig
 )
