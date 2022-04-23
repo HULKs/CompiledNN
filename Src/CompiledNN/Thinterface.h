@@ -1,5 +1,9 @@
 #pragma once
 
+namespace NeuralNetwork {
+  class CompiledNN;
+}
+
 struct CompiledNN {
   CompiledNN();
   CompiledNN(const CompiledNN &model) = delete;
@@ -19,5 +23,5 @@ struct CompiledNN {
   void apply();
 
 private:
-  void *core{nullptr};
+  NeuralNetwork::CompiledNN *core{nullptr};
 };
