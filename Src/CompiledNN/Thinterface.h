@@ -4,6 +4,13 @@ namespace NeuralNetwork {
   class CompiledNN;
 }
 
+struct Tensor {
+  float* data;
+  unsigned long data_size;
+  const unsigned int* dimensions;
+  unsigned int dimensions_size;
+};
+
 struct CompiledNN {
   CompiledNN();
   CompiledNN(const CompiledNN &model) = delete;
@@ -14,11 +21,10 @@ struct CompiledNN {
 
   void compile(const char* filename);
 
-  float* input(unsigned long index);
-  float* output(unsigned long index);
+  Tensor input(unsigned long index);
+  Tensor output(unsigned long index);
 
   unsigned long inputSize(unsigned long index);
-  unsigned long outputSize(unsigned long index);
 
   void apply();
 
