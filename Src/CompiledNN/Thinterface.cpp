@@ -3,33 +3,30 @@
 #include "Model.h"
 #include <string>
 
-CompiledNN::CompiledNN()
-    : core{new NeuralNetwork::CompiledNN} {}
+CompiledNN::CompiledNN() : core{new NeuralNetwork::CompiledNN} {}
 
 CompiledNN::~CompiledNN() {
   delete reinterpret_cast<NeuralNetwork::CompiledNN *>(core);
 }
 
-void CompiledNN::compile(const char *filename) {
-  core->compile(filename);
+void CompiledNN::compile(const char *filename) { core->compile(filename); }
+
+Tensor CompiledNN::input(std::size_t index) {
+  Tensor tensor{core->input(index).data(), core->input(index).size(),
+                core->input(index).dims().data(),
+                core->input(index).dims().size()};
+  return tensor;
 }
 
-float *CompiledNN::input(std::size_t index) {
-  return core->input(index).data();
-}
-
-float *CompiledNN::output(std::size_t index) {
-  return core->output(index).data();
+Tensor CompiledNN::output(std::size_t index) {
+  Tensor tensor{core->output(index).data(), core->output(index).size(),
+                core->output(index).dims().data(),
+                core->output(index).dims().size()};
+  return tensor;
 }
 
 unsigned long CompiledNN::inputSize(unsigned long index) {
   return core->input(index).size();
 }
 
-unsigned long CompiledNN::outputSize(unsigned long index) {
-  return core->output(index).size();
-}
-
-void CompiledNN::apply() {
-  return core->apply();
-}
+void CompiledNN::apply() { return core->apply(); }
