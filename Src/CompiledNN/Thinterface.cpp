@@ -1,6 +1,5 @@
 #include "Thinterface.h"
 #include "CompiledNN.h"
-#include "Model.h"
 #include <string>
 
 CompiledNN::CompiledNN() : core{new NeuralNetwork::CompiledNN} {}

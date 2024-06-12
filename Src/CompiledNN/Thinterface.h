@@ -8,14 +8,14 @@ struct Tensor {
   const float *data;
   unsigned long data_size;
   const unsigned int *dimensions;
-  unsigned int dimensions_size;
+  unsigned long dimensions_size;
 };
 
 struct TensorMut {
   float *data;
   unsigned long data_size;
   const unsigned int *dimensions;
-  unsigned int dimensions_size;
+  unsigned long dimensions_size;
 };
 
 struct CompiledNN {
