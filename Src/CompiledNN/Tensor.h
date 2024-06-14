@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <functional>
 #include <numeric>
+#include <cstdint>
 #include <type_traits>
 #include <vector>
 #include <cstdint>
@@ -34,12 +35,12 @@ namespace NeuralNetwork
 
     inline constexpr unsigned int computeIndex(const std::vector<unsigned int>& indices) const
     {
-      ASSERT(indices.size() == dimensions.size());
+      ASSERT(indices.size() <= dimensions.size());
 
       unsigned int index = indices[0];
 
-      for(unsigned int i = 1; i < indices.size(); i++)
-        index = index * dimensions[i] + indices[i];
+      for(unsigned int i = 1; i < dimensions.size(); i++)
+        index = index * dimensions[i] + (i < indices.size() ? indices[i] : 0);
 
       return index;
     }
